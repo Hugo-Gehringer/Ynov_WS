@@ -1,0 +1,22 @@
+{
+  "name": "ynov_ws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "mongodb": "^6.5.0",
+    "mysql2": "^3.9.3",
+    "pg": "^8.11.3",
+    "url": "^0.11.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30"
+  }
+}
