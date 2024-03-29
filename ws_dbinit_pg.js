@@ -23,3 +23,5 @@ const initDb = async () => {
 };
 
 initDb().catch(console.error);
+
+exports.initDb = initDb;
