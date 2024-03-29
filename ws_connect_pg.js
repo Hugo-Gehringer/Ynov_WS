@@ -18,5 +18,6 @@ pool.query('SELECT NOW()', (err, res) => {
         return;
     }
     console.log('Connexion réussie à PostgreSQL:', res.rows);
-    pool.end();
 });
+
+module.exports = { pool };

@@ -11,19 +11,22 @@ const connectionConfig = {
   }
 };
 
-async function connectAndQuery() {
+async function connectMySQL() {
   try {
     const connection = await mysql.createConnection(connectionConfig);
     console.log('Connexion réussie à MySQL');
-
-    // Test de la connexion et requête simple
-    const [rows, fields] = await connection.execute('SELECT 1 + 1 AS solution');
-    console.log('Le résultat de la requête est :', rows);
-
-    await connection.end();
+    return connection;
   } catch (error) {
     console.error('Erreur lors de la connexion à MySQL:', error);
+    throw error; 
   }
 }
 
-connectAndQuery();
+module.exports = connectMySQL;
+
+// Pour tester la connexion directement lorsque ce fichier est exécuté
+if (require.main === module) {
+  connectMySQL().then(connection => {
+    connection.end();
+  }).catch(console.error);
+}
