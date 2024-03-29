@@ -4,6 +4,15 @@ async function initDb() {
   const connection = await connectMySQL();
 
   try {
+    // drop tables if they exist
+    await connection.execute(`
+      DROP TABLE IF EXISTS ws_entries;
+    `);
+
+    await connection.execute(`
+      DROP TABLE IF EXISTS ws_masks;
+    `);
+
     // Création de la table ws_masks
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS ws_masks (
