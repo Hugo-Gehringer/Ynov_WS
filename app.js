@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-
+app.use(express.static('public'));
 app.use(express.json())
 
 app.listen(port, () => {
@@ -139,4 +139,9 @@ app.delete('/entries/:id', async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
+});
+
+// Route to render index.html
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/public/index.html');
 });
