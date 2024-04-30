@@ -19,8 +19,7 @@ async function initDb() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         description VARCHAR(255),
         name VARCHAR(50),
-        mask_json JSON,
-        UNIQUE KEY unique_name (name)
+        mask_json JSON
       );
     `);
 

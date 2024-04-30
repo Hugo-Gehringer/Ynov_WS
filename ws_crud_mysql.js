@@ -29,6 +29,13 @@ async function readMask(id) {
     return rows[0];
 }
 
+async function readAllMasks() {
+    const connection = await mysql.createConnection(connectionConfig);
+    const [rows] = await connection.execute('SELECT * FROM ws_masks;');
+    await connection.end();
+    return rows;
+}
+
 async function updateMask(id, description, name, mask_json) {
     const connection = await mysql.createConnection(connectionConfig);
     await connection.execute(
@@ -61,6 +68,13 @@ async function readEntry(id) {
     const [rows] = await connection.execute('SELECT * FROM ws_entries WHERE id = ?;', [id]);
     await connection.end();
     return rows[0];
+}
+
+async function readAllEntries() {
+    const connection = await mysql.createConnection(connectionConfig);
+    const [rows] = await connection.execute('SELECT * FROM ws_entries;');
+    await connection.end();
+    return rows;
 }
 
 async function updateEntry(id, id_mask, entry_json) {
@@ -119,6 +133,6 @@ async function testCRUD() {
     console.log("Fin du test CRUD MySQL.");
 }
 
-testCRUD().catch(console.error);
+// testCRUD().catch(console.error);
 
-module.exports = { createMask, readMask, updateMask, removeMask, createEntry, readEntry, updateEntry, removeEntry };
+module.exports = { createMask, readMask, readAllMasks, updateMask, removeMask, createEntry, readEntry, readAllEntries, updateEntry, removeEntry };
