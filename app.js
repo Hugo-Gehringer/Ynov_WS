@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 const port = 3000;
 app.use(express.static('public'));
 app.use(express.json())
@@ -8,10 +10,49 @@ app.listen(port, () => {
   console.log(`API démarrée sur http://localhost:${port}`);
 });
 
-const { createMask, readMask, readAllMasks, updateMask, removeMask, createEntry, readEntry, readAllEntries, updateEntry, removeEntry } = require('./ws_crud_mysql'); 
+const { createMask, readMask, readAllMasks, updateMask, removeMask, createEntry, readEntry, readAllEntries, updateEntry, removeEntry } = require('./ws_crud_mysql');
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'My API',
+            version: '1.0.0',
+            description: 'A simple Express API',
+        },
+    },
+    apis: ['./app.js'], // change this to the actual paths of your files
+};
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ========= MASK ==========
 
+/**
+ * @swagger
+ * /masks:
+ *   post:
+ *     summary: Create a new mask
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               mask_json:
+ *                 type: object
+ *     responses:
+ *       201:
+ *         description: The ID of the created mask
+ *       400:
+ *         description: Missing information in the request
+ *       500:
+ *         description: Internal server error
+ */
 app.post('/masks', async (req, res) => {
     const { description, name, mask_json } = req.body;
 
@@ -27,7 +68,38 @@ app.post('/masks', async (req, res) => {
         res.status(500).json({ error: "Erreur interne du serveur" });
     }
 });
-
+/**
+ * @swagger
+ * /masks/{id}:
+ *   put:
+ *     summary: Update a mask
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               mask_json:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: The updated mask
+ *       404:
+ *         description: Mask not found
+ *       500:
+ *         description: Internal server error
+ */
 app.put('/masks/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -43,6 +115,17 @@ app.put('/masks/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /masks:
+ *   get:
+ *     summary: Retrieve a list of masks
+ *     responses:
+ *       200:
+ *         description: A list of masks
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/masks', async (req, res) => {
     try {
         const masks = await readAllMasks();
@@ -52,6 +135,25 @@ app.get('/masks', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /masks/{id}:
+ *   get:
+ *     summary: Retrieve a mask by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: The requested mask
+ *       404:
+ *         description: Mask not found
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/masks/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -66,6 +168,23 @@ app.get('/masks/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /masks/{id}:
+ *   delete:
+ *     summary: Delete a mask by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Mask successfully deleted
+ *       500:
+ *         description: Internal server error
+ */
 app.delete('/masks/:id', async (req, res) => {
     try {
         const { id } = req.params;
@@ -78,7 +197,17 @@ app.delete('/masks/:id', async (req, res) => {
 
 
 // ========= ENTRY ==========
-
+/**
+ * @swagger
+ * /entries:
+ *   get:
+ *     summary: Retrieve a list of entries
+ *     responses:
+ *       200:
+ *         description: A list of entries
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/entries', async (req, res) => {
     try {
         const entries = await readAllEntries();
@@ -88,6 +217,25 @@ app.get('/entries', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entries/{id}:
+ *   get:
+ *     summary: Retrieve an entry by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: The requested entry
+ *       404:
+ *         description: Entry not found
+ *       500:
+ *         description: Internal server error
+ */
 app.get('/entries/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -102,6 +250,30 @@ app.get('/entries/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entries:
+ *   post:
+ *     summary: Create a new entry
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_mask:
+ *                 type: integer
+ *               entry_json:
+ *                 type: object
+ *     responses:
+ *       201:
+ *         description: The ID of the created entry
+ *       400:
+ *         description: Missing fields
+ *       500:
+ *         description: Internal server error
+ */
 app.post('/entries', async (req, res) => {
     try {
         const { id_mask, entry_json } = req.body;
@@ -116,6 +288,36 @@ app.post('/entries', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entries/{id}:
+ *   put:
+ *     summary: Update an entry
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_mask:
+ *                 type: integer
+ *               entry_json:
+ *                 type: object
+ *     responses:
+ *       200:
+ *         description: The updated entry
+ *       400:
+ *         description: Missing fields
+ *       500:
+ *         description: Internal server error
+ */
 app.put('/entries/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -131,6 +333,23 @@ app.put('/entries/:id', async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /entries/{id}:
+ *   delete:
+ *     summary: Delete an entry by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Entry successfully deleted
+ *       500:
+ *         description: Internal server error
+ */
 app.delete('/entries/:id', async (req, res) => {
     try {
         const id = req.params.id;
