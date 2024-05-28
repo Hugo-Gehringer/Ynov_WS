@@ -8,6 +8,11 @@
 
 ## Déployé sur Render : https://ynov-ws-ryzb.onrender.com/api-docs/
 
+## Description
+
+Projet de connexion, d'initialisation et de CRUD a 3 différentes type de Base de données, MongoDB, PgSQL et MySQL.
+Il a été déployé avec seulement une base de donnée PQSQL sur Render et avec Swagger pour la documentation des API.
+
 # Installation
 
 ```bash
