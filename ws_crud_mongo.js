@@ -90,10 +90,10 @@ async function testCRUD() {
     const updatedEntry = await updateEntry(createdEntry._id, updatedEntryInfo);
     console.log("Entrée mise à jour:", updatedEntry);
 
-    await removeEntry(createdEntry._id);
+    // await removeEntry(createdEntry._id);
     console.log("Entrée supprimée.");
 
-    await removeMask(createdMask._id);
+    // await removeMask(createdMask._id);
     console.log("Masque supprimé.");
 
     console.log("Fin du test CRUD MongoDB.");

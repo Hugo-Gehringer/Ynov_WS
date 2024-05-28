@@ -2,10 +2,10 @@ const { Pool } = require('pg');
 
 const pool = new Pool({
     user: 'avnadmin',
-    host: 'ynov-ws-ynov-ws.a.aivencloud.com',
+    host: 'pg-187a41f5-ynovws.b.aivencloud.com',
     database: 'defaultdb',
-    password: 'AVNS_s2aqljrfKWjH-t78J32',
-    port: 25401,
+    password: 'AVNS_2K9mLXn17GT-GTry2rr',
+    port: 14130,
     ssl: {
         rejectUnauthorized: false
     }
