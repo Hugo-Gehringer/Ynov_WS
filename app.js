@@ -10,7 +10,7 @@ app.listen(port, () => {
   console.log(`API démarrée sur http://localhost:${port}`);
 });
 
-const { createMask, readMask, readAllMasks, updateMask, removeMask, createEntry, readEntry, readAllEntries, updateEntry, removeEntry } = require('./ws_crud_mysql');
+const { createMask, readMask,readAllMasks, updateMask, removeMask, createEntry, readEntry, readAllEntries, updateEntry, removeEntry } = require('./ws_crud_pg');
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',

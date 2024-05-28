@@ -1,10 +1,11 @@
 const { Pool } = require('pg');
+const mysql = require("mysql2/promise");
 const pool = new Pool({
     user: 'avnadmin',
-    host: 'ynov-ws-ynov-ws.a.aivencloud.com',
+    host: 'pg-187a41f5-ynovws.b.aivencloud.com',
     database: 'defaultdb',
-    password: 'AVNS_s2aqljrfKWjH-t78J32',
-    port: 25401,
+    password: 'AVNS_2K9mLXn17GT-GTry2rr',
+    port: 14130,
     ssl: {
         rejectUnauthorized: false
     }
@@ -21,6 +22,11 @@ async function createMask(description, name, mask_json) {
 async function readMask(id) {
   const result = await pool.query('SELECT * FROM ws_masks WHERE id = $1;', [id]);
   return result.rows[0];
+}
+
+async function readAllMasks() {
+    const result = await pool.query('SELECT * FROM ws_masks;');
+    return result.rows;
 }
 
 async function updateMask(id, description, name, mask_json) {
@@ -47,6 +53,11 @@ async function createEntry(id_mask, entry_json) {
 async function readEntry(id) {
   const result = await pool.query('SELECT * FROM ws_entries WHERE id = $1;', [id]);
   return result.rows[0];
+}
+
+async function readAllEntries() {
+    const result = await pool.query('SELECT * FROM ws_entries;');
+    return result.rows;
 }
 
 async function updateEntry(id, id_mask, entry_json) {
@@ -90,17 +101,17 @@ async function testCRUD() {
     const updatedEntry = await updateEntry(createdEntry.id, createdMask.id, JSON.stringify({ data: "Updated Entry" }));
     console.log("Entrée mise à jour:", updatedEntry);
 
-    
-    await removeEntry(createdEntry.id);
-    console.log("Entrée supprimée.");
-
-    await removeMask(createdMask.id);
-    console.log("Masque supprimé.");
+    //
+    // await removeEntry(createdEntry.id);
+    // console.log("Entrée supprimée.");
+    //
+    // await removeMask(createdMask.id);
+    // console.log("Masque supprimé.");
 
     console.log("Fin du test CRUD.");
     await pool.end();
 }
 
-testCRUD().catch(console.error);
+// testCRUD().catch(console.error);
 
-module.exports = { createMask, readMask, updateMask, removeMask, createEntry, readEntry, updateEntry, removeEntry };
+module.exports = { createMask, readMask, readAllMasks, readAllEntries, updateMask, removeMask, createEntry, readEntry, updateEntry, removeEntry };
